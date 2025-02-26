@@ -1096,7 +1096,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   username: HolyWolf
   human: 1
-  hud: {fileID: 0}
+  hud: {fileID: 1949107840}
+  startMoney: 1000
+  startMoneyLimit: 2000
+  startPower: 500
+  startPowerLimit: 500
 --- !u!4 &1921845609
 Transform:
   m_ObjectHideFlags: 0
@@ -1270,6 +1274,9 @@ MonoBehaviour:
   harvestCursors:
   - {fileID: 2800000, guid: c4efc7ceb69f41640b6f719f8f7ad7d9, type: 3}
   - {fileID: 2800000, guid: be12d504d46bbaa4f95ba548a2c8a90a, type: 3}
+  resources:
+  - {fileID: 2800000, guid: 6c4e7e10851f8b947bfb7882cf72a4ec, type: 3}
+  - {fileID: 2800000, guid: 6ce741f64308ad844a49220cf980bd67, type: 3}
 --- !u!4 &1949107841
 Transform:
   m_ObjectHideFlags: 0

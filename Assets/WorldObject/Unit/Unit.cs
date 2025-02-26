@@ -1,4 +1,7 @@
-public class Building : WorldObject {
+public class Unit : WorldObject {
+
+    /*** Game Engine methods, all can be overridden by subclass ***/
+
     protected override void Awake() {
         base.Awake();
     }

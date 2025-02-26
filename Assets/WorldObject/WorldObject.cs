@@ -1,3 +1,4 @@
+using RTS;
 using UnityEngine;
 
 public class WorldObject : MonoBehaviour {
@@ -7,26 +8,45 @@ public class WorldObject : MonoBehaviour {
     protected Player player;
     protected string[] actions = { };
     protected bool currentlySelected = false;
+    protected Rect playingArea = new(0.0f, 0.0f, 0.0f, 0.0f);
+
     protected virtual void Awake() {
+        selectionBounds = ResourceManager.InvalidBounds;
+        CalculateBounds();
     }
 
-    protected virtual void Start() {
-        player = transform.root.GetComponentInChildren<Player>();
-    }
+    protected virtual void Start() => player = transform.root.GetComponentInChildren<Player>();
 
     protected virtual void Update() {
     }
 
     protected virtual void OnGUI() {
+        if (currentlySelected) DrawSelection();
     }
 
-    public void SetSelection(bool selected) {
+    protected Bounds selectionBounds;
+    private void DrawSelection() {
+        GUI.skin = ResourceManager.SelectBoxSkin;
+        Rect selectBox = WorkManager.CalculateSelectionBox(selectionBounds, playingArea);
+        //Draw the selection box around the currently selected object, within the bounds of the playing area
+        GUI.BeginGroup(playingArea);
+        DrawSelectionBox(selectBox);
+        GUI.EndGroup();
+    }
+
+    public void CalculateBounds() {
+        selectionBounds = new Bounds(transform.position, Vector3.zero);
+        foreach (Renderer r in GetComponentsInChildren<Renderer>()) {
+            selectionBounds.Encapsulate(r.bounds);
+        }
+    }
+
+    public void SetSelection(bool selected, Rect playingArea) {
         currentlySelected = selected;
+        if (selected) this.playingArea = playingArea;
     }
 
-    public string[] GetActions() {
-        return actions;
-    }
+    public string[] GetActions() => actions;
 
     public virtual void PerformAction(string actionToPerform) {
         //it is up to children with specific actions to determine what to do with each of those actions
@@ -43,9 +63,11 @@ public class WorldObject : MonoBehaviour {
 
     private void ChangeSelection(WorldObject worldObject, Player controller) {
         //this should be called by the following line, but there is an outside chance it will not
-        SetSelection(false);
-        if (controller.SelectedObject) controller.SelectedObject.SetSelection(false);
+        SetSelection(false, playingArea);
+        if (controller.SelectedObject) controller.SelectedObject.SetSelection(false, playingArea);
         controller.SelectedObject = worldObject;
-        worldObject.SetSelection(true);
+        worldObject.SetSelection(true, controller.hud.GetPlayingArea());
     }
+
+    protected virtual void DrawSelectionBox(Rect selectBox) => GUI.Box(selectBox, "");
 }

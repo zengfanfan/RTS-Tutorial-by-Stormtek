@@ -1,3 +1,4 @@
+using System.Collections;
 using RTS;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ public class HUD : MonoBehaviour {
     public Texture2D selectCursor, leftCursor, rightCursor, upCursor, downCursor;
     public Texture2D[] moveCursors, attackCursors, harvestCursors;
     private CursorState activeCursorState;
-    private int currentFrame = 0;
+    private int mouseFrame = 0;
 
     const int ORDERS_BAR_WIDTH = 150, RESOURCE_BAR_HEIGHT = 40;
     Player player;
@@ -17,6 +18,14 @@ public class HUD : MonoBehaviour {
         player = transform.root.GetComponent<Player>();
         ResourceManager.StoreSelectBoxItems(selectBoxSkin);
         SetCursorState(CursorState.Select);
+        StartCoroutine(MouseAnimationTimer());
+    }
+
+    private IEnumerator MouseAnimationTimer() {
+        for (; ; ) {
+            yield return new WaitForSecondsRealtime(1f / 3);
+            mouseFrame++;
+        }
     }
 
     void OnGUI() {
@@ -81,14 +90,11 @@ public class HUD : MonoBehaviour {
         //sequence animation for cursor (based on more than one image for the cursor)
         //change once per second, loops through array of images
         if (activeCursorState == CursorState.Move) {
-            currentFrame = (int)Time.time % moveCursors.Length;
-            activeCursor = moveCursors[currentFrame];
+            activeCursor = moveCursors[mouseFrame % moveCursors.Length];
         } else if (activeCursorState == CursorState.Attack) {
-            currentFrame = (int)Time.time % attackCursors.Length;
-            activeCursor = attackCursors[currentFrame];
+            activeCursor = attackCursors[mouseFrame % attackCursors.Length];
         } else if (activeCursorState == CursorState.Harvest) {
-            currentFrame = (int)Time.time % harvestCursors.Length;
-            activeCursor = harvestCursors[currentFrame];
+            activeCursor = harvestCursors[mouseFrame % harvestCursors.Length];
         }
     }
 
@@ -113,16 +119,13 @@ public class HUD : MonoBehaviour {
             activeCursor = selectCursor;
             break;
         case CursorState.Attack:
-            currentFrame = (int)Time.time % attackCursors.Length;
-            activeCursor = attackCursors[currentFrame];
+            activeCursor = attackCursors[mouseFrame % attackCursors.Length];
             break;
         case CursorState.Harvest:
-            currentFrame = (int)Time.time % harvestCursors.Length;
-            activeCursor = harvestCursors[currentFrame];
+            activeCursor = harvestCursors[mouseFrame % harvestCursors.Length];
             break;
         case CursorState.Move:
-            currentFrame = (int)Time.time % moveCursors.Length;
-            activeCursor = moveCursors[currentFrame];
+            activeCursor = moveCursors[mouseFrame % moveCursors.Length];
             break;
         case CursorState.PanLeft:
             activeCursor = leftCursor;

@@ -27,9 +27,9 @@ public class UserInput : MonoBehaviour {
             GameObject hitObject = FindHitObject();
             Vector3 hitPoint = FindHitPoint();
             if (hitObject && hitPoint != ResourceManager.InvalidPosition) {
-                if (player.SelectedObject) player.SelectedObject.MouseClick(hitObject, hitPoint, player);
+                if (player.SelectedObject != null) player.SelectedObject.MouseClick(hitObject, hitPoint, player);
                 else if (hitObject.name != "Ground") {
-                    WorldObject worldObject = hitObject.transform.parent.GetComponent<WorldObject>();
+                    WorldObject worldObject = hitObject.GetComponentInParent<WorldObject>();
                     if (worldObject) {
                         //we already know the player has no selected object
                         player.SelectedObject = worldObject;
@@ -136,8 +136,8 @@ public class UserInput : MonoBehaviour {
                 else if (hoverObject.name != "Ground") {
                     Player owner = hoverObject.transform.root.GetComponent<Player>();
                     if (owner) {
-                        Unit unit = hoverObject.transform.parent.GetComponent<Unit>();
-                        Building building = hoverObject.transform.parent.GetComponent<Building>();
+                        Unit unit = hoverObject.GetComponentInParent<Unit>();
+                        Building building = hoverObject.GetComponent<Building>();
                         if (owner.username == player.username && (unit || building)) player.hud.SetCursorState(CursorState.Select);
                     }
                 }

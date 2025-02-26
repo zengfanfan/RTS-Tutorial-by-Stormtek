@@ -15,7 +15,7 @@ public class WorldObject : MonoBehaviour {
         CalculateBounds();
     }
 
-    protected virtual void Start() => player = transform.parent.GetComponentInChildren<Player>();
+    protected virtual void Start() => player = GetComponentInParent<Player>();
 
     protected virtual void Update() {}
 
@@ -54,7 +54,7 @@ public class WorldObject : MonoBehaviour {
     public virtual void MouseClick(GameObject hitObject, Vector3 hitPoint, Player controller) {
         //only handle input if currently selected
         if (currentlySelected && hitObject && hitObject.name != "Ground") {
-            WorldObject worldObject = hitObject.transform.parent.GetComponent<WorldObject>();
+            WorldObject worldObject = hitObject.GetComponentInParent<WorldObject>();
             //clicked on another selectable object
             if (worldObject) ChangeSelection(worldObject, controller);
         }
@@ -76,5 +76,7 @@ public class WorldObject : MonoBehaviour {
             if (hoverObject.name != "Ground") player.hud.SetCursorState(CursorState.Select);
         }
     }
+
+    public bool IsOwnedBy(Player owner) => player && player.Equals(owner);
 
 }

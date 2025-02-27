@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RTS {
@@ -13,7 +14,23 @@ namespace RTS {
         public static readonly Bounds InvalidBounds = new(new(-99999, -99999, -99999), new(0,0,0));
 
         public static GUISkin SelectBoxSkin { get; private set; }
-        public static void StoreSelectBoxItems(GUISkin skin) => SelectBoxSkin = skin;
+        public static Texture2D HealthyTexture { get; private set; }
+        public static Texture2D DamagedTexture { get; private set; }
+        public static Texture2D CriticalTexture { get; private set; }
+        public static void StoreSelectBoxItems(GUISkin skin, Texture2D healthy, Texture2D damaged, Texture2D critical) {
+            SelectBoxSkin = skin;
+            HealthyTexture = healthy;
+            DamagedTexture = damaged;
+            CriticalTexture = critical;
+        }
+        private static Dictionary<ResourceType, Texture2D> resourceHealthBarTextures;
+        public static Texture2D GetResourceHealthBar(ResourceType resourceType) {
+            if (resourceHealthBarTextures != null && resourceHealthBarTextures.ContainsKey(resourceType)) return resourceHealthBarTextures[resourceType];
+            return null;
+        }
+        public static void SetResourceHealthBarTextures(Dictionary<ResourceType, Texture2D> images) {
+            resourceHealthBarTextures = images;
+        }
 
         private static GameObjectList gameObjectList;
         public static void SetGameObjectList(GameObjectList objectList) => gameObjectList = objectList;
@@ -22,6 +39,6 @@ namespace RTS {
         public static GameObject GetWorldObject(string name) => gameObjectList.GetWorldObject(name);
         public static GameObject GetPlayerObject() => gameObjectList.GetPlayerObject();
         public static Texture2D GetBuildImage(string name) => gameObjectList.GetBuildImage(name);
-        
+
     }
 }

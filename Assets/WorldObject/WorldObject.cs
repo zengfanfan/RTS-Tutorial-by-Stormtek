@@ -9,6 +9,8 @@ public class WorldObject : MonoBehaviour {
     protected string[] actions = { };
     protected bool currentlySelected = false;
     protected Rect playingArea = new(0.0f, 0.0f, 0.0f, 0.0f);
+    protected GUIStyle healthStyle = new();
+    protected float healthPercentage = 1.0f;
 
     protected virtual void Awake() {
         selectionBounds = ResourceManager.InvalidBounds;
@@ -56,10 +58,14 @@ public class WorldObject : MonoBehaviour {
         if (currentlySelected && hitObject && hitObject.name != "Ground") {
             WorldObject worldObject = hitObject.GetComponentInParent<WorldObject>();
             //clicked on another selectable object
-            if (worldObject) ChangeSelection(worldObject, controller);
+            if (worldObject) {
+                Resource resource = hitObject.transform.parent.GetComponent<Resource>();
+                if (resource && resource.IsEmpty()) return;
+                ChangeSelection(worldObject, controller);
+            }
         }
     }
-
+    
     private void ChangeSelection(WorldObject worldObject, Player controller) {
         //this should be called by the following line, but there is an outside chance it will not
         SetSelection(false, playingArea);
@@ -68,7 +74,18 @@ public class WorldObject : MonoBehaviour {
         worldObject.SetSelection(true, controller.hud.GetPlayingArea());
     }
 
-    protected virtual void DrawSelectionBox(Rect selectBox) => GUI.Box(selectBox, "");
+    protected virtual void DrawSelectionBox(Rect selectBox) {
+        GUI.Box(selectBox, "");
+        CalculateCurrentHealth();
+        GUI.Label(new Rect(selectBox.x, selectBox.y - 7, selectBox.width * healthPercentage, 5), "", healthStyle);
+    }
+
+    protected virtual void CalculateCurrentHealth() {
+        healthPercentage = (float)hitPoints / maxHitPoints;
+        if (healthPercentage > 0.65f) healthStyle.normal.background = ResourceManager.HealthyTexture;
+        else if (healthPercentage > 0.35f) healthStyle.normal.background = ResourceManager.DamagedTexture;
+        else healthStyle.normal.background = ResourceManager.CriticalTexture;
+    }
 
     public virtual void SetHoverState(GameObject hoverObject) {
         //only handle input if owned by a human player and currently selected
@@ -78,5 +95,7 @@ public class WorldObject : MonoBehaviour {
     }
 
     public bool IsOwnedBy(Player owner) => player && player.Equals(owner);
+
+    public Bounds GetSelectionBounds() => selectionBounds;
 
 }

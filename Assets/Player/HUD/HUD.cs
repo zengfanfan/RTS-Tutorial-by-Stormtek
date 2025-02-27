@@ -21,6 +21,8 @@ public class HUD : MonoBehaviour {
     public Texture2D buildFrame, buildMask;
     public Texture2D smallButtonHover, smallButtonClick;
     public Texture2D rallyPointCursor;
+    public Texture2D healthy, damaged, critical;
+    public Texture2D[] resourceHealthBars;
 
     private readonly Dictionary<ResourceType, Texture2D> resourceImages = new();
     private Dictionary<ResourceType, int> resourceValues = new(), resourceLimits = new();
@@ -52,7 +54,19 @@ public class HUD : MonoBehaviour {
         }
 
         player = transform.root.GetComponent<Player>();
-        ResourceManager.StoreSelectBoxItems(selectBoxSkin);
+        ResourceManager.StoreSelectBoxItems(selectBoxSkin, healthy, damaged, critical);
+
+        Dictionary<ResourceType, Texture2D> resourceHealthBarTextures = new Dictionary<ResourceType, Texture2D>();
+        for (int i = 0; i < resourceHealthBars.Length; i++) {
+            switch (resourceHealthBars[i].name) {
+            case "ore":
+                resourceHealthBarTextures.Add(ResourceType.Ore, resourceHealthBars[i]);
+                break;
+            default: break;
+            }
+        }
+        ResourceManager.SetResourceHealthBarTextures(resourceHealthBarTextures);
+
         SetCursorState(CursorState.Select);
         StartCoroutine(MouseAnimationTimer());
     }

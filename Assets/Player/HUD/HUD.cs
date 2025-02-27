@@ -19,6 +19,8 @@ public class HUD : MonoBehaviour {
     public Texture2D[] resources;
     public Texture2D buttonHover, buttonClick;
     public Texture2D buildFrame, buildMask;
+    public Texture2D smallButtonHover, smallButtonClick;
+    public Texture2D rallyPointCursor;
 
     private readonly Dictionary<ResourceType, Texture2D> resourceImages = new();
     private Dictionary<ResourceType, int> resourceValues = new(), resourceLimits = new();
@@ -28,6 +30,7 @@ public class HUD : MonoBehaviour {
     private float sliderValue;
     private Player player;
     private int buildAreaHeight = 0;
+    private CursorState previousCursorState;
 
     void Start() {
         buildAreaHeight = Screen.height - RESOURCE_BAR_HEIGHT - SELECTION_NAME_HEIGHT - 2 * BUTTON_SPACING;
@@ -110,6 +113,7 @@ public class HUD : MonoBehaviour {
                 Building selectedBuilding = lastSelection.GetComponent<Building>();
                 if (selectedBuilding) {
                     DrawBuildQueue(selectedBuilding.GetBuildQueueValues(), selectedBuilding.GetBuildPercentage());
+                    DrawStandardBuildingOptions(selectedBuilding);
                 }
             }
         }
@@ -120,6 +124,32 @@ public class HUD : MonoBehaviour {
         }
 
         GUI.EndGroup();
+    }
+
+    private void DrawStandardBuildingOptions(Building building) {
+        GUIStyle buttons = new();
+        buttons.hover.background = smallButtonHover;
+        buttons.active.background = smallButtonClick;
+        GUI.skin.button = buttons;
+        int leftPos = BUILD_IMAGE_WIDTH + SCROLL_BAR_WIDTH + BUTTON_SPACING;
+        int topPos = buildAreaHeight - BUILD_IMAGE_HEIGHT / 2;
+        int width = BUILD_IMAGE_WIDTH / 2;
+        int height = BUILD_IMAGE_HEIGHT / 2;
+        if (building.HasSpawnPoint()) {
+            if (GUI.Button(new(leftPos, topPos, width, height), building.sellImage)) {
+                building.Sell();
+            }
+            leftPos += width + BUTTON_SPACING;
+            if (GUI.Button(new(leftPos, topPos, width, height), building.rallyPointImage)) {
+                if (activeCursorState != CursorState.RallyPoint && previousCursorState != CursorState.RallyPoint) {
+                    SetCursorState(CursorState.RallyPoint);
+                } else {
+                    //dirty hack to ensure toggle between RallyPoint and not works ...
+                    SetCursorState(CursorState.PanRight);
+                    SetCursorState(CursorState.Select);
+                }
+            }
+        }
     }
 
     private void DrawBuildQueue(string[] buildQueue, float buildPercentage) {
@@ -226,6 +256,7 @@ public class HUD : MonoBehaviour {
                                                               //adjust position base on the type of cursor being shown
         if (activeCursorState == CursorState.PanRight) leftPos = Screen.width - activeCursor.width;
         else if (activeCursorState == CursorState.PanDown) topPos = Screen.height - activeCursor.height;
+        else if (activeCursorState == CursorState.RallyPoint) topPos -= activeCursor.height;
         else if (activeCursorState == CursorState.Move || activeCursorState == CursorState.Select || activeCursorState == CursorState.Harvest) {
             topPos -= activeCursor.height / 2;
             leftPos -= activeCursor.width / 2;
@@ -234,6 +265,7 @@ public class HUD : MonoBehaviour {
     }
 
     public void SetCursorState(CursorState newState) {
+        if (activeCursorState != newState) previousCursorState = activeCursorState;
         activeCursorState = newState;
         switch (newState) {
         case CursorState.Select:
@@ -260,6 +292,9 @@ public class HUD : MonoBehaviour {
         case CursorState.PanDown:
             activeCursor = downCursor;
             break;
+        case CursorState.RallyPoint:
+            activeCursor = rallyPointCursor;
+            break;
         default: break;
         }
     }
@@ -268,5 +303,8 @@ public class HUD : MonoBehaviour {
         this.resourceValues = resourceValues;
         this.resourceLimits = resourceLimits;
     }
+
+    public CursorState GetPreviousCursorState() => previousCursorState;
+    public CursorState GetCursorState() => activeCursorState;
 
 }

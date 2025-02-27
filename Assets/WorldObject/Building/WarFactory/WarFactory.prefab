@@ -56,6 +56,8 @@ MonoBehaviour:
   hitPoints: 100
   maxHitPoints: 100
   maxBuildProgress: 10
+  rallyPointImage: {fileID: 2800000, guid: 09ef8b1f7986e4248a7c27e9cd6f69b3, type: 3}
+  sellImage: {fileID: 2800000, guid: cc2ffc736313a674a9b9d4c2eaf328af, type: 3}
 --- !u!1 &1991746479290011088
 GameObject:
   m_ObjectHideFlags: 0

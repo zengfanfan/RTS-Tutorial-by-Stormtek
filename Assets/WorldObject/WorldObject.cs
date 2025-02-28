@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using RTS;
 using UnityEngine;
 
@@ -11,13 +12,16 @@ public class WorldObject : MonoBehaviour {
     protected Rect playingArea = new(0.0f, 0.0f, 0.0f, 0.0f);
     protected GUIStyle healthStyle = new();
     protected float healthPercentage = 1.0f;
+    private readonly List<Material> oldMaterials = new();
 
     protected virtual void Awake() {
         selectionBounds = ResourceManager.InvalidBounds;
         CalculateBounds();
     }
 
-    protected virtual void Start() => player = GetComponentInParent<Player>();
+    protected virtual void Start() => SetPlayer();
+
+    public void SetPlayer() => player = transform.root.GetComponentInChildren<Player>();
 
     protected virtual void Update() {}
 
@@ -65,7 +69,7 @@ public class WorldObject : MonoBehaviour {
             }
         }
     }
-    
+
     private void ChangeSelection(WorldObject worldObject, Player controller) {
         //this should be called by the following line, but there is an outside chance it will not
         SetSelection(false, playingArea);
@@ -76,15 +80,21 @@ public class WorldObject : MonoBehaviour {
 
     protected virtual void DrawSelectionBox(Rect selectBox) {
         GUI.Box(selectBox, "");
-        CalculateCurrentHealth();
-        GUI.Label(new Rect(selectBox.x, selectBox.y - 7, selectBox.width * healthPercentage, 5), "", healthStyle);
+        CalculateCurrentHealth(0.35f, 0.65f);
+        DrawHealthBar(selectBox, "");
     }
 
-    protected virtual void CalculateCurrentHealth() {
+    protected virtual void CalculateCurrentHealth(float lowSplit, float highSplit) {
         healthPercentage = (float)hitPoints / maxHitPoints;
-        if (healthPercentage > 0.65f) healthStyle.normal.background = ResourceManager.HealthyTexture;
-        else if (healthPercentage > 0.35f) healthStyle.normal.background = ResourceManager.DamagedTexture;
+        if (healthPercentage > highSplit) healthStyle.normal.background = ResourceManager.HealthyTexture;
+        else if (healthPercentage > lowSplit) healthStyle.normal.background = ResourceManager.DamagedTexture;
         else healthStyle.normal.background = ResourceManager.CriticalTexture;
+    }
+
+    protected void DrawHealthBar(Rect selectBox, string label) {
+        healthStyle.padding.top = -20;
+        healthStyle.fontStyle = FontStyle.Bold;
+        GUI.Label(new Rect(selectBox.x, selectBox.y - 7, selectBox.width * healthPercentage, 5), label, healthStyle);
     }
 
     public virtual void SetHoverState(GameObject hoverObject) {
@@ -97,5 +107,30 @@ public class WorldObject : MonoBehaviour {
     public bool IsOwnedBy(Player owner) => player && player.Equals(owner);
 
     public Bounds GetSelectionBounds() => selectionBounds;
+
+    public void SetColliders(bool enabled) {
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach (Collider collider in colliders) collider.enabled = enabled;
+    }
+
+    public void SetTransparentMaterial(Material material, bool storeExistingMaterial) {
+        if (storeExistingMaterial) oldMaterials.Clear();
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers) {
+            if (storeExistingMaterial) oldMaterials.Add(renderer.material);
+            renderer.material = material;
+        }
+    }
+
+    public void RestoreMaterials() {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        if (oldMaterials.Count == renderers.Length) {
+            for (int i = 0; i < renderers.Length; i++) {
+                renderers[i].material = oldMaterials[i];
+            }
+        }
+    }
+
+    public void SetPlayingArea(Rect playingArea) => this.playingArea = playingArea;
 
 }

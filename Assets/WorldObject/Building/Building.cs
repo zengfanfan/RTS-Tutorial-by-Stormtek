@@ -10,6 +10,7 @@ public class Building : WorldObject {
     protected Vector3 rallyPoint;
     public Texture2D rallyPointImage;
     public Texture2D sellImage;
+    private bool needsBuilding = false;
 
     protected override void Awake() {
         base.Awake();
@@ -24,7 +25,20 @@ public class Building : WorldObject {
         ProcessBuildQueue();
     }
 
-    protected override void OnGUI() => base.OnGUI();
+    protected override void OnGUI() {
+        base.OnGUI();
+        if (needsBuilding) DrawBuildProgress();
+    }
+
+    private void DrawBuildProgress() {
+        GUI.skin = ResourceManager.SelectBoxSkin;
+        Rect selectBox = WorkManager.CalculateSelectionBox(selectionBounds, playingArea);
+        //Draw the selection box around the currently selected object, within the bounds of the main draw area
+        GUI.BeginGroup(playingArea);
+        CalculateCurrentHealth(0.5f, 0.99f);
+        DrawHealthBar(selectBox, "Building ...");
+        GUI.EndGroup();
+    }
 
     protected void CreateUnit(string unitName) => buildQueue.Enqueue(unitName);
 
@@ -101,6 +115,23 @@ public class Building : WorldObject {
         if (player) player.AddResource(ResourceType.Money, sellValue);
         if (currentlySelected) SetSelection(false, playingArea);
         Destroy(gameObject);
+    }
+
+    public void StartConstruction() {
+        CalculateBounds();
+        needsBuilding = true;
+        hitPoints = 0;
+    }
+
+    public bool UnderConstruction() => needsBuilding;
+
+    public void Construct(int amount) {
+        hitPoints += amount;
+        if (hitPoints >= maxHitPoints) {
+            hitPoints = maxHitPoints;
+            needsBuilding = false;
+            RestoreMaterials();
+        }
     }
 
 }

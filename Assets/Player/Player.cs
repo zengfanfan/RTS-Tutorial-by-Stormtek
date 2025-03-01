@@ -9,7 +9,8 @@ public class Player : MonoBehaviour {
     public WorldObject SelectedObject { get; set; }
     public int startMoney, startMoneyLimit, startPower, startPowerLimit;
     public Material notAllowedMaterial, allowedMaterial;
-
+    public Color teamColor;
+    
     private Dictionary<ResourceType, int> resources, resourceLimits;
     private Building tempBuilding;
     private Unit tempCreator;

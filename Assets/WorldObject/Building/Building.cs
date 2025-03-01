@@ -59,9 +59,7 @@ public class Building : WorldObject {
         return values;
     }
 
-    public float GetBuildPercentage() {
-        return currentBuildProgress / maxBuildProgress;
-    }
+    public float GetBuildPercentage() => currentBuildProgress / maxBuildProgress;
 
     public override void SetSelection(bool selected, Rect playingArea) {
         base.SetSelection(selected, playingArea);

@@ -12,6 +12,7 @@ namespace RTS {
         public static readonly int BuildSpeed = 2;
         public static readonly Vector3 InvalidPosition = new(-99999, -99999, -99999);
         public static readonly Bounds InvalidBounds = new(new(-99999, -99999, -99999), new(0,0,0));
+        public static bool MenuOpen { get; set; }
 
         public static GUISkin SelectBoxSkin { get; private set; }
         public static Texture2D HealthyTexture { get; private set; }
@@ -40,5 +41,11 @@ namespace RTS {
         public static GameObject GetPlayerObject() => gameObjectList.GetPlayerObject();
         public static Texture2D GetBuildImage(string name) => gameObjectList.GetBuildImage(name);
 
+        public static readonly float ButtonHeight = 40;
+        public static readonly float HeaderHeight = 32, HeaderWidth = 256;
+        public static readonly float TextHeight = 25, Padding = 10;
+        public static float PauseMenuHeight => HeaderHeight + 2 * ButtonHeight + 4 * Padding;
+        public static float MenuWidth => HeaderWidth + 2 * Padding;
+        public static float ButtonWidth => (MenuWidth - 3 * Padding) / 2;
     }
 }

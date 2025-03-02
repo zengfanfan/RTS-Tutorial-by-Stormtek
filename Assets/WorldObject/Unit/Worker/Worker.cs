@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+using RTS;
 using UnityEngine;
 
 public class Worker : Unit {
@@ -44,7 +46,7 @@ public class Worker : Unit {
         }
         if (doBase) base.MouseClick(hitObject, hitPoint, controller);
     }
-    
+
     /*** Public Methods ***/
 
     public override void SetBuilding(Building project) {
@@ -68,6 +70,13 @@ public class Worker : Unit {
     private void CreateBuilding(string buildingName) {
         Vector3 buildPoint = new(transform.position.x, transform.position.y, transform.position.z + 10);
         if (player) player.CreateBuilding(buildingName, buildPoint, this, playingArea);
+    }
+
+    public override void SaveDetails(JsonWriter writer) {
+        base.SaveDetails(writer);
+        SaveManager.WriteBoolean(writer, "Building", building);
+        SaveManager.WriteFloat(writer, "AmountBuilt", amountBuilt);
+        if (currentProject) SaveManager.WriteInt(writer, "CurrentProjectId", currentProject.ObjectId);
     }
 
 }

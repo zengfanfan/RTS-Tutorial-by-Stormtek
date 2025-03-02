@@ -518,6 +518,7 @@ GameObject:
   m_Component:
   - component: {fileID: 705507995}
   - component: {fileID: 705507994}
+  - component: {fileID: 705507996}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -602,6 +603,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1615850209}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &705507996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705507993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffe853b067f4542429b67c60c8ea7d8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &891544902 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5677558671005100944, guid: f81b6c1d7d73380428afccbb0a69b8e3, type: 3}
@@ -716,6 +729,7 @@ GameObject:
   - component: {fileID: 1165028790}
   - component: {fileID: 1165028789}
   - component: {fileID: 1165028788}
+  - component: {fileID: 1165028792}
   m_Layer: 0
   m_Name: Ground
   m_TagString: Untagged
@@ -810,6 +824,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1615850209}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1165028792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1165028787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1680fe8f0af7fee4d81f27b93e84d6bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1218082201
 PrefabInstance:
   m_ObjectHideFlags: 0

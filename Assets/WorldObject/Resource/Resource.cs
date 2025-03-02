@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using RTS;
 
 public class Resource : WorldObject {
@@ -31,5 +32,10 @@ public class Resource : WorldObject {
     protected override void CalculateCurrentHealth(float lowSplit, float highSplit) {
         healthPercentage = amountLeft / capacity;
         healthStyle.normal.background = ResourceManager.GetResourceHealthBar(resourceType);
+    }
+
+    public override void SaveDetails(JsonWriter writer) {
+        base.SaveDetails(writer);
+        SaveManager.WriteFloat(writer, "AmountLeft", amountLeft);
     }
 }

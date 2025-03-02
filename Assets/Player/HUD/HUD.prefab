@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2830162406906967556}
   - component: {fileID: 6760761176560410728}
+  - component: {fileID: 7345645704893857472}
+  - component: {fileID: 7120190240374042267}
   m_Layer: 0
   m_Name: HUD
   m_TagString: Untagged
@@ -79,3 +81,31 @@ MonoBehaviour:
   resourceHealthBars:
   - {fileID: 2800000, guid: dca7cc6b5daf21c48808c7de7923167a, type: 3}
   playerDetailsSkin: {fileID: 11400000, guid: fb6ead5ad282b914699037e62d109c1c, type: 2}
+--- !u!114 &7345645704893857472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3631868715030800229}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 055e9f45ebe24ca4192008232f3f67ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mySkin: {fileID: 11400000, guid: b10ba07184ba62d439fa31cf6ef876d5, type: 2}
+  header: {fileID: 2800000, guid: 1e4855a7d39948d48940504b80e17c28, type: 3}
+--- !u!114 &7120190240374042267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3631868715030800229}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2ff5b30c23a26848a899bacd028eeab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mySkin: {fileID: 11400000, guid: b10ba07184ba62d439fa31cf6ef876d5, type: 2}
+  selectionSkin: {fileID: 11400000, guid: 3a527beb58f45ad40b1bb186820132a3, type: 2}

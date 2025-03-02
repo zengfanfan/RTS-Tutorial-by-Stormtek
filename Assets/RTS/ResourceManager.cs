@@ -47,5 +47,13 @@ namespace RTS {
         public static float PauseMenuHeight => HeaderHeight + 2 * ButtonHeight + 4 * Padding;
         public static float MenuWidth => HeaderWidth + 2 * Padding;
         public static float ButtonWidth => (MenuWidth - 3 * Padding) / 2;
+
+        public static string LevelName { get; set; }
+
+        public static int GetNewObjectId() {
+            LevelLoader loader = (LevelLoader)Object.FindObjectOfType(typeof(LevelLoader));
+            if (loader) return loader.GetNewObjectId();
+            return -1;
+        }
     }
 }

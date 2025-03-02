@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using RTS;
 using UnityEngine;
 
@@ -130,6 +131,15 @@ public class Building : WorldObject {
             needsBuilding = false;
             RestoreMaterials();
         }
+    }
+
+    public override void SaveDetails(JsonWriter writer) {
+        base.SaveDetails(writer);
+        SaveManager.WriteBoolean(writer, "NeedsBuilding", needsBuilding);
+        SaveManager.WriteVector(writer, "SpawnPoint", spawnPoint);
+        SaveManager.WriteVector(writer, "RallyPoint", rallyPoint);
+        SaveManager.WriteFloat(writer, "BuildProgress", currentBuildProgress);
+        SaveManager.WriteStringArray(writer, "BuildQueue", buildQueue.ToArray());
     }
 
 }

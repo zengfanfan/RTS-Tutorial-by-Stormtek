@@ -37,7 +37,7 @@ namespace RTS {
             Save();
         }
 
-        public static string GetPlayerName() => currentPlayer.Name == "" ? "Unknown" : currentPlayer.Name;
+        public static string GetPlayerName() => (currentPlayer.Name ?? "") == "" ? "Unknown" : currentPlayer.Name;
         public static void SetAvatarTextures(Texture2D[] avatarTextures) => avatars = avatarTextures;
 
         public static Texture2D GetPlayerAvatar() {
@@ -136,6 +136,17 @@ namespace RTS {
                 if (players[i].Name == playerName) return players[i].Avatar;
             }
             return 0;
+        }
+
+        public static string[] GetSavedGames() {
+            DirectoryInfo directory = new("SavedGames" + Path.DirectorySeparatorChar + currentPlayer.Name);
+            FileInfo[] files = directory.GetFiles();
+            string[] savedGames = new string[files.Length];
+            for (int i = 0; i < files.Length; i++) {
+                string filename = files[i].Name;
+                savedGames[i] = filename.Substring(0, filename.IndexOf("."));
+            }
+            return savedGames;
         }
     }
 }

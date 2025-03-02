@@ -1,5 +1,6 @@
 using UnityEngine;
 using RTS;
+using Newtonsoft.Json;
 
 public class Harvester : Unit {
 
@@ -135,6 +136,17 @@ public class Harvester : Unit {
             if (harvestType == ResourceType.Ore) depositType = ResourceType.Money;
             player.AddResource(depositType, deposit);
         }
+    }
+
+    public override void SaveDetails(JsonWriter writer) {
+        base.SaveDetails(writer);
+        SaveManager.WriteBoolean(writer, "Harvesting", harvesting);
+        SaveManager.WriteBoolean(writer, "Emptying", emptying);
+        SaveManager.WriteFloat(writer, "CurrentLoad", currentLoad);
+        SaveManager.WriteFloat(writer, "CurrentDeposit", currentDeposit);
+        SaveManager.WriteString(writer, "HarvestType", harvestType.ToString());
+        if (resourceDeposit) SaveManager.WriteInt(writer, "ResourceDepositId", resourceDeposit.ObjectId);
+        if (resourceStore) SaveManager.WriteInt(writer, "ResourceStoreId", resourceStore.ObjectId);
     }
 
 }

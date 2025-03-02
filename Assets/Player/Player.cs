@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using RTS;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ public class Player : MonoBehaviour {
     public int startMoney, startMoneyLimit, startPower, startPowerLimit;
     public Material notAllowedMaterial, allowedMaterial;
     public Color teamColor;
-    
+
     private Dictionary<ResourceType, int> resources, resourceLimits;
     private Building tempBuilding;
     private Unit tempCreator;
@@ -66,14 +67,16 @@ public class Player : MonoBehaviour {
         if (unitObject && spawnPoint != rallyPoint) unitObject.StartMove(rallyPoint);
         if (unitObject) {
             unitObject.SetBuilding(creator);
+            unitObject.ObjectId = ResourceManager.GetNewObjectId();
             if (spawnPoint != rallyPoint) unitObject.StartMove(rallyPoint);
         }
     }
 
     public void CreateBuilding(string buildingName, Vector3 buildPoint, Unit creator, Rect playingArea) {
-        GameObject newBuilding = (GameObject)Instantiate(ResourceManager.GetBuilding(buildingName), buildPoint, new Quaternion());
+        GameObject newBuilding = Instantiate(ResourceManager.GetBuilding(buildingName), buildPoint, new Quaternion());
         tempBuilding = newBuilding.GetComponent<Building>();
         if (tempBuilding) {
+            tempBuilding.ObjectId = ResourceManager.GetNewObjectId();
             tempCreator = creator;
             findingPlacement = true;
             tempBuilding.SetTransparentMaterial(notAllowedMaterial, true);
@@ -140,6 +143,15 @@ public class Player : MonoBehaviour {
         Destroy(tempBuilding.gameObject);
         tempBuilding = null;
         tempCreator = null;
+    }
+
+    public virtual void SaveDetails(JsonWriter writer) {
+        SaveManager.WriteString(writer, "Username", username);
+        SaveManager.WriteBoolean(writer, "Human", human);
+        SaveManager.WriteColor(writer, "TeamColor", teamColor);
+        SaveManager.SavePlayerResources(writer, resources);
+        SaveManager.SavePlayerBuildings(writer, GetComponentsInChildren<Building>());
+        SaveManager.SavePlayerUnits(writer, GetComponentsInChildren<Unit>());
     }
 
 }

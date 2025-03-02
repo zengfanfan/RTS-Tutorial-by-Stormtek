@@ -18,6 +18,11 @@ public class SelectPlayerMenu : MonoBehaviour {
     }
 
     void OnGUI() {
+        if (SelectionList.MouseDoubleClick()) {
+            playerName = SelectionList.GetCurrentEntry();
+            SelectPlayer();
+        }
+
         GUI.skin = mySkin;
 
         float menuHeight = GetMenuHeight();
@@ -60,7 +65,7 @@ public class SelectPlayerMenu : MonoBehaviour {
         }
 
         string prevSelection = SelectionList.GetCurrentEntry();
-        
+
         //selection list, needs to be called outside of the group for the menu
         float selectionLeft = groupRect.x + ResourceManager.Padding;
         float selectionTop = groupRect.y + ResourceManager.Padding;
@@ -76,9 +81,7 @@ public class SelectPlayerMenu : MonoBehaviour {
         }
     }
 
-    private float GetMenuHeight() {
-        return 250 + GetMenuItemsHeight();
-    }
+    private float GetMenuHeight() => 250 + GetMenuItemsHeight();
     private float GetMenuItemsHeight() {
         float avatarHeight = 0;
         if (avatars.Length > 0) avatarHeight = avatars[0].height + 2 * ResourceManager.Padding;

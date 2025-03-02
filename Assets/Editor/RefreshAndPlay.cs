@@ -4,7 +4,7 @@ using UnityEditor;
 public class RefreshAndPlay {
     static RefreshAndPlay() { // 每次 refresh assets 都会执行
         EditorApplication.update += OnUpdate;
-        Menu.SetChecked("Zeng/Enable", Enbaled);
+        UnityEditor.Menu.SetChecked("Zeng/Enable", Enbaled);
     }
 
     static bool Active {// 避免刚打开项目进入Play模式, 只有通过自定义菜单才可以
@@ -25,7 +25,7 @@ public class RefreshAndPlay {
     [MenuItem("Zeng/Enable")]
     public static void OnMenuEnable() {
         Enbaled = !Enbaled;
-        Menu.SetChecked("Zeng/Enable", Enbaled);
+        UnityEditor.Menu.SetChecked("Zeng/Enable", Enbaled);
     }
 
     [MenuItem("Zeng/Play", true)]

@@ -78,3 +78,4 @@ MonoBehaviour:
   critical: {fileID: 2800000, guid: c05e9bdbf0d2f64449f3ec498f347fa2, type: 3}
   resourceHealthBars:
   - {fileID: 2800000, guid: dca7cc6b5daf21c48808c7de7923167a, type: 3}
+  playerDetailsSkin: {fileID: 11400000, guid: fb6ead5ad282b914699037e62d109c1c, type: 2}

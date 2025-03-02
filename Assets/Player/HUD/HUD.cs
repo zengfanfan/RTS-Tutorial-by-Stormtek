@@ -23,6 +23,7 @@ public class HUD : MonoBehaviour {
     public Texture2D rallyPointCursor;
     public Texture2D healthy, damaged, critical;
     public Texture2D[] resourceHealthBars;
+    public GUISkin playerDetailsSkin;
 
     private readonly Dictionary<ResourceType, Texture2D> resourceImages = new();
     private Dictionary<ResourceType, int> resourceValues = new(), resourceLimits = new();
@@ -83,7 +84,27 @@ public class HUD : MonoBehaviour {
             DrawOrdersBar();
             DrawResourceBar();
             DrawMouseCursor();
+            DrawPlayerDetails();
         }
+    }
+
+    private void DrawPlayerDetails() {
+        GUI.skin = playerDetailsSkin;
+        GUI.BeginGroup(new(0, 0, Screen.width, Screen.height));
+        float height = ResourceManager.TextHeight;
+        float leftPos = ResourceManager.Padding;
+        float topPos = Screen.height - height - ResourceManager.Padding;
+        Texture2D avatar = PlayerManager.GetPlayerAvatar();
+        if (avatar) {
+            //we want the texture to be drawn square at all times
+            GUI.DrawTexture(new(leftPos, topPos, height, height), avatar);
+            leftPos += height + ResourceManager.Padding;
+        }
+        float minWidth = 0, maxWidth = 0;
+        string playerName = PlayerManager.GetPlayerName();
+        playerDetailsSkin.GetStyle("label").CalcMinMaxWidth(new GUIContent(playerName), out minWidth, out maxWidth);
+        GUI.Label(new(leftPos, topPos, maxWidth, height), playerName);
+        GUI.EndGroup();
     }
 
     private void DrawResourceBar() {

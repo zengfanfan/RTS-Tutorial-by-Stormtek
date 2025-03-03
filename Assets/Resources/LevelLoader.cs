@@ -1,4 +1,7 @@
+using System;
+using RTS;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /**
  * Singleton that handles loading level details. This includes making sure
@@ -19,15 +22,19 @@ public class LevelLoader : MonoBehaviour {
         } else {
             Destroy(gameObject);
         }
-        OnLevelWasLoadedZ();
+        SceneManager.sceneLoaded += (a,b) => OnLevelWasLoadedZ();
     }
 
     void OnLevelWasLoadedZ() {
         if (initialised) {
-            WorldObject[] worldObjects = FindObjectsOfType(typeof(WorldObject)) as WorldObject[];
-            foreach (WorldObject worldObject in worldObjects) {
-                worldObject.ObjectId = nextObjectId++;
-                if (nextObjectId >= int.MaxValue) nextObjectId = 0;
+            if (ResourceManager.LevelName != null && ResourceManager.LevelName != "") {
+                LoadManager.LoadGame(ResourceManager.LevelName);
+            } else {
+                WorldObject[] worldObjects = FindObjectsOfType(typeof(WorldObject)) as WorldObject[];
+                foreach (WorldObject worldObject in worldObjects) {
+                    worldObject.ObjectId = nextObjectId++;
+                    if (nextObjectId >= int.MaxValue) nextObjectId = 0;
+                }
             }
         }
     }

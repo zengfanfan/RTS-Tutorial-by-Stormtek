@@ -53,5 +53,14 @@ namespace RTS {
             return ResourceManager.InvalidPosition;
         }
 
+        public static ResourceType GetResourceType(string type) => type switch {
+            "Money" => ResourceType.Money,
+            "Power" => ResourceType.Power,
+            "Ore" => ResourceType.Ore,
+            _ => ResourceType.Unknown,
+        };
+
+        public static bool ObjectIsGround(GameObject obj) => obj.name == "Ground" || obj.name == "Ground(Clone)";
+
     }
 }

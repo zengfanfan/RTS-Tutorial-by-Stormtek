@@ -34,7 +34,7 @@ public class Tank : Unit {
         spawnPoint.x += 2.1f * transform.forward.x;
         spawnPoint.y += 1.4f;
         spawnPoint.z += 2.1f * transform.forward.z;
-        GameObject gameObject = (GameObject)Instantiate(ResourceManager.GetWorldObject("TankProjectile"), spawnPoint, transform.rotation);
+        GameObject gameObject = Instantiate(ResourceManager.GetWorldObject("TankProjectile"), spawnPoint, transform.rotation);
         Projectile projectile = gameObject.GetComponentInChildren<Projectile>();
         projectile.SetRange(0.9f * weaponRange);
         projectile.SetTarget(target);
@@ -43,6 +43,14 @@ public class Tank : Unit {
     public override void SaveDetails(JsonWriter writer) {
         base.SaveDetails(writer);
         SaveManager.WriteQuaternion(writer, "AimRotation", aimRotation);
+    }
+
+    protected override void HandleLoadedProperty(JsonTextReader reader, string propertyName, object readValue) {
+        base.HandleLoadedProperty(reader, propertyName, readValue);
+        switch (propertyName) {
+        case "AimRotation": aimRotation = LoadManager.LoadQuaternion(reader); break;
+        default: break;
+        }
     }
 
 }

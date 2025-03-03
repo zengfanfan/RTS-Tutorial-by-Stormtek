@@ -8,10 +8,16 @@ public class Unit : WorldObject {
     private Vector3 destination;
     private Quaternion targetRotation;
     private GameObject destinationTarget;
+    private int loadedDestinationTargetId = -1;
 
     protected override void Awake() => base.Awake();
 
-    protected override void Start() => base.Start();
+    protected override void Start() {
+        base.Start();
+        if (player && loadedSavedValues && loadedDestinationTargetId >= 0) {
+            destinationTarget = player.GetObjectForId(loadedDestinationTargetId).gameObject;
+        }
+    }
 
     protected override void Update() {
         base.Update();
@@ -79,7 +85,7 @@ public class Unit : WorldObject {
         //only handle input if owned by a human player and currently selected
         if (player && player.human && currentlySelected) {
             bool moveHover = false;
-            if (hoverObject.name == "Ground") {
+            if (WorkManager.ObjectIsGround(hoverObject)) {
                 moveHover = true;
             } else {
                 Resource resource = hoverObject.transform.parent.GetComponent<Resource>();
@@ -98,7 +104,7 @@ public class Unit : WorldObject {
                 Resource resource = hitObject.transform.parent.GetComponent<Resource>();
                 if (resource && resource.IsEmpty()) clickedOnEmptyResource = true;
             }
-            if ((hitObject.name == "Ground" || clickedOnEmptyResource) && hitPoint != ResourceManager.InvalidPosition) {
+            if ((WorkManager.ObjectIsGround(hitObject) || clickedOnEmptyResource) && hitPoint != ResourceManager.InvalidPosition) {
                 float x = hitPoint.x;
                 //makes sure that the unit stays on top of the surface it is on
                 float y = hitPoint.y + player.SelectedObject.transform.position.y;
@@ -134,6 +140,18 @@ public class Unit : WorldObject {
         if (destinationTarget) {
             WorldObject destinationObject = destinationTarget.GetComponent<WorldObject>();
             if (destinationObject) SaveManager.WriteInt(writer, "DestinationTargetId", destinationObject.ObjectId);
+        }
+    }
+
+    protected override void HandleLoadedProperty(JsonTextReader reader, string propertyName, object readValue) {
+        base.HandleLoadedProperty(reader, propertyName, readValue);
+        switch (propertyName) {
+        case "Moving": moving = (bool)readValue; break;
+        case "Rotating": rotating = (bool)readValue; break;
+        case "Destination": destination = LoadManager.LoadVector(reader); break;
+        case "TargetRotation": targetRotation = LoadManager.LoadQuaternion(reader); break;
+        case "DestinationTargetId": loadedDestinationTargetId = (int)(long)readValue; break;
+        default: break;
         }
     }
 

@@ -23,14 +23,18 @@ public class GameObjectList : MonoBehaviour {
             Building building = buildings[i].GetComponent<Building>();
             if (building && building.name == name) return buildings[i];
         }
+        Debug.LogWarning($"[GetBuilding] `{name}` not found!");
         return null;
     }
 
     public GameObject GetUnit(string name) {
         for (int i = 0; i < units.Length; i++) {
             Unit unit = units[i].GetComponent<Unit>();
-            if (unit && unit.name == name) return units[i];
+            if (unit != null && unit.name == name) {
+                return units[i];
+            }
         }
+        Debug.LogWarning($"[GetUnit] `{name}` not found!");
         return null;
     }
 
@@ -38,6 +42,7 @@ public class GameObjectList : MonoBehaviour {
         foreach (GameObject worldObject in worldObjects) {
             if (worldObject.name == name) return worldObject;
         }
+        Debug.LogWarning($"[GetWorldObject] `{name}` not found!");
         return null;
     }
 
@@ -52,6 +57,7 @@ public class GameObjectList : MonoBehaviour {
             Unit unit = units[i].GetComponent<Unit>();
             if (unit && unit.name == name) return unit.buildImage;
         }
+        Debug.LogWarning($"[GetBuildImage] `{name}` not found!");
         return null;
     }
 

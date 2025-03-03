@@ -95,7 +95,7 @@ namespace RTS {
         }
 
         private static void SaveLighting(JsonWriter writer) {
-            Sun sun = (Sun)GameObject.FindObjectOfType(typeof(Sun));
+            Sun sun = (Sun)Object.FindObjectOfType(typeof(Sun));
             if (writer == null || sun == null) return;
 
             writer.WritePropertyName("Sun");
@@ -110,7 +110,6 @@ namespace RTS {
 
         public static void WriteVector(JsonWriter writer, string name, Vector3 vector) {
             if (writer == null) return;
-
             writer.WritePropertyName(name);
             writer.WriteStartObject();
             writer.WritePropertyName("x");
@@ -124,7 +123,6 @@ namespace RTS {
 
         public static void WriteQuaternion(JsonWriter writer, string name, Quaternion quaternion) {
             if (writer == null) return;
-
             writer.WritePropertyName(name);
             writer.WriteStartObject();
             writer.WritePropertyName("x");
@@ -140,11 +138,8 @@ namespace RTS {
 
         public static void WriteString(JsonWriter writer, string name, string entry) {
             if (writer == null) return;
-
             writer.WritePropertyName(name);
-            //make sure no bracketed values get stored (e.g. Tank(Clone) becomes Tank)
-            if (entry.Contains("(")) writer.WriteValue(entry.Substring(0, entry.IndexOf("(")));
-            else writer.WriteValue(entry);
+            writer.WriteValue(entry);
         }
 
         public static void WriteInt(JsonWriter writer, string name, int amount) {
@@ -155,21 +150,18 @@ namespace RTS {
 
         public static void WriteFloat(JsonWriter writer, string name, float amount) {
             if (writer == null) return;
-
             writer.WritePropertyName(name);
             writer.WriteValue(amount);
         }
 
         public static void WriteBoolean(JsonWriter writer, string name, bool state) {
             if (writer == null) return;
-
             writer.WritePropertyName(name);
             writer.WriteValue(state);
         }
 
         public static void WriteColor(JsonWriter writer, string name, Color color) {
             if (writer == null) return;
-
             writer.WritePropertyName(name);
             writer.WriteStartObject();
             writer.WritePropertyName("r");
@@ -183,14 +175,18 @@ namespace RTS {
             writer.WriteEndObject();
         }
 
-        public static void SavePlayerResources(JsonWriter writer, Dictionary<ResourceType, int> resources) {
+        public static void SavePlayerResources(JsonWriter writer, Dictionary<ResourceType, int> resources, Dictionary<ResourceType, int> resourceLimits) {
             if (writer == null) return;
-
             writer.WritePropertyName("Resources");
             writer.WriteStartArray();
             foreach (KeyValuePair<ResourceType, int> pair in resources) {
                 writer.WriteStartObject();
                 WriteInt(writer, pair.Key.ToString(), pair.Value);
+                writer.WriteEndObject();
+            }
+            foreach (KeyValuePair<ResourceType, int> pair in resourceLimits) {
+                writer.WriteStartObject();
+                WriteInt(writer, pair.Key.ToString() + "_Limit", pair.Value);
                 writer.WriteEndObject();
             }
             writer.WriteEndArray();
@@ -209,7 +205,6 @@ namespace RTS {
 
         public static void SavePlayerUnits(JsonWriter writer, Unit[] units) {
             if (writer == null) return;
-
             writer.WritePropertyName("Units");
             writer.WriteStartArray();
             foreach (Unit unit in units) {
@@ -220,13 +215,27 @@ namespace RTS {
 
         public static void WriteStringArray(JsonWriter writer, string name, string[] values) {
             if (writer == null) return;
-
             writer.WritePropertyName(name);
             writer.WriteStartArray();
             foreach (string v in values) {
                 writer.WriteValue(v);
             }
             writer.WriteEndArray();
+        }
+
+        public static void WriteRect(JsonWriter writer, string name, Rect rect) {
+            if (writer == null) return;
+            writer.WritePropertyName(name);
+            writer.WriteStartObject();
+            writer.WritePropertyName("x");
+            writer.WriteValue(rect.x);
+            writer.WritePropertyName("y");
+            writer.WriteValue(rect.y);
+            writer.WritePropertyName("width");
+            writer.WriteValue(rect.width);
+            writer.WritePropertyName("height");
+            writer.WriteValue(rect.height);
+            writer.WriteEndObject();
         }
 
     }

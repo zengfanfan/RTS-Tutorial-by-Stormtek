@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6760761176560410728}
   - component: {fileID: 7345645704893857472}
   - component: {fileID: 7120190240374042267}
+  - component: {fileID: -6335936453384746489}
   m_Layer: 0
   m_Name: HUD
   m_TagString: Untagged
@@ -108,4 +109,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mySkin: {fileID: 11400000, guid: b10ba07184ba62d439fa31cf6ef876d5, type: 2}
-  selectionSkin: {fileID: 11400000, guid: 3a527beb58f45ad40b1bb186820132a3, type: 2}
+  selectionSkin: {fileID: 11400000, guid: 07e7c385005a7a2438a4c06655a17078, type: 2}
+--- !u!114 &-6335936453384746489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3631868715030800229}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 256654da59314534c92a194c56c15590, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainSkin: {fileID: 11400000, guid: b10ba07184ba62d439fa31cf6ef876d5, type: 2}
+  selectionSkin: {fileID: 11400000, guid: 07e7c385005a7a2438a4c06655a17078, type: 2}

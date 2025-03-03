@@ -18,6 +18,19 @@ public class Resource : WorldObject {
         resourceType = ResourceType.Unknown;
     }
 
+    protected override void CalculateCurrentHealth(float lowSplit, float highSplit) {
+        healthPercentage = amountLeft / capacity;
+        healthStyle.normal.background = ResourceManager.GetResourceHealthBar(resourceType);
+    }
+
+    protected override void HandleLoadedProperty(JsonTextReader reader, string propertyName, object readValue) {
+        base.HandleLoadedProperty(reader, propertyName, readValue);
+        switch (propertyName) {
+        case "AmountLeft": amountLeft = (float)(double)readValue; break;
+        default: break;
+        }
+    }
+
     /*** Public methods ***/
 
     public void Remove(float amount) {
@@ -28,11 +41,6 @@ public class Resource : WorldObject {
     public bool IsEmpty() => amountLeft <= 0;
 
     public ResourceType GetResourceType() => resourceType;
-
-    protected override void CalculateCurrentHealth(float lowSplit, float highSplit) {
-        healthPercentage = amountLeft / capacity;
-        healthStyle.normal.background = ResourceManager.GetResourceHealthBar(resourceType);
-    }
 
     public override void SaveDetails(JsonWriter writer) {
         base.SaveDetails(writer);

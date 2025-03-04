@@ -33,7 +33,7 @@ public class AudioElement {
     }
 
     AudioSource GetAudioSource(AudioClip sound) {
-        if (soundObjects.TryGetValue(sound, out GameObject go)) {
+        if (sound != null && soundObjects.TryGetValue(sound, out GameObject go)) {
             return go.GetComponent<AudioSource>();
         }
         return null;

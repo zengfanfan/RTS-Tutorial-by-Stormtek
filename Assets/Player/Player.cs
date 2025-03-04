@@ -136,6 +136,7 @@ public class Player : MonoBehaviour {
         tempBuilding.SetColliders(true);
         tempCreator.SetBuilding(tempBuilding);
         tempBuilding.StartConstruction();
+        RemoveResource(ResourceType.Money, tempBuilding.cost);
     }
 
     public void CancelBuildingPlacement() {
@@ -251,5 +252,17 @@ public class Player : MonoBehaviour {
             } else if (reader.TokenType == JsonToken.EndArray) return;
         }
     }
+
+    public bool IsDead() {
+        Building[] buildings = GetComponentsInChildren<Building>();
+        Unit[] units = GetComponentsInChildren<Unit>();
+        if (buildings != null && buildings.Length > 0) return false;
+        if (units != null && units.Length > 0) return false;
+        return true;
+    }
+
+    public int GetResourceAmount(ResourceType type) => resources[type];
+
+    public void RemoveResource(ResourceType type, int amount) => resources[type] -= amount;
 
 }

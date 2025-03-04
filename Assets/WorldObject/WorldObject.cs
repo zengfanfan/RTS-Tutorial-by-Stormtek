@@ -61,7 +61,7 @@ public class WorldObject : MonoBehaviour {
     }
 
     protected virtual void OnGUI() {
-        if (currentlySelected) DrawSelection();
+        if (currentlySelected && !ResourceManager.MenuOpen) DrawSelection();
     }
 
     protected Bounds selectionBounds;
@@ -154,7 +154,7 @@ public class WorldObject : MonoBehaviour {
     }
 
     protected virtual void UseWeapon() {
-        audioElement?.Play(useWeaponSound);
+        if (Time.timeScale > 0) audioElement?.Play(useWeaponSound);
         currentWeaponChargeTime = 0.0f;
         //this behaviour needs to be specified by a specific object
     }

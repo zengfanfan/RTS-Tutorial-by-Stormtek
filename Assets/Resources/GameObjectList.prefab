@@ -47,10 +47,12 @@ MonoBehaviour:
   buildings:
   - {fileID: 3027134936414625, guid: c6f0b0fadfebde8409c68bd9de0802fb, type: 3}
   - {fileID: 1239004982482601552, guid: 8b65a96d43874e348a06ddc1f91f627d, type: 3}
+  - {fileID: 4716454463478728771, guid: 959107feab1e9f2419673fce63c98aca, type: 3}
   units:
   - {fileID: 8379450497417453849, guid: 34d0459a7e3e400408ab52c7c5d938b2, type: 3}
   - {fileID: 986939327108777967, guid: baa15ca1e44d7954782c7427399da897, type: 3}
   - {fileID: 3426003189028141797, guid: db3310e9944cc8c4f8ec504adaed7324, type: 3}
+  - {fileID: 2861139456933141138, guid: 30cc11578cf39df4597aa552a8803891, type: 3}
   worldObjects:
   - {fileID: 4001574696557304909, guid: bef0e3f00a45d9d4aaa91f3bd911799a, type: 3}
   - {fileID: 4346779256397659774, guid: 364dea11080bc974782cd4ac801dbc4c, type: 3}

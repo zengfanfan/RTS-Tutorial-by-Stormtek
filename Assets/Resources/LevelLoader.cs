@@ -50,6 +50,9 @@ public class LevelLoader : MonoBehaviour {
                     if (nextObjectId >= int.MaxValue) nextObjectId = 0;
                 }
             }
+
+            Time.timeScale = 1.0f;
+            ResourceManager.MenuOpen = false;
         }
     }
 

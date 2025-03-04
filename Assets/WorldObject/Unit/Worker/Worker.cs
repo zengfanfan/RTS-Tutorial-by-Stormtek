@@ -1,17 +1,17 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using RTS;
 using UnityEngine;
 
 public class Worker : Unit {
-
+    public AudioClip finishedJobSound;
+    public float finishedJobVolume = 1.0f;
     public int buildSpeed;
 
     private Building currentProject;
     private bool building = false;
     private float amountBuilt = 0.0f;
     private int loadedProjectId = -1;
-
-    /*** Game Engine methods, all can be overridden by subclass ***/
 
     protected override void Start() {
         base.Start();
@@ -31,7 +31,10 @@ public class Worker : Unit {
                 if (amount > 0) {
                     amountBuilt -= amount;
                     currentProject.Construct(amount);
-                    if (!currentProject.UnderConstruction()) building = false;
+                    if (!currentProject.UnderConstruction()) {
+                        audioElement?.Play(finishedJobSound);
+                        building = false;
+                    }
                 }
             }
         }
@@ -52,7 +55,16 @@ public class Worker : Unit {
         if (doBase) base.MouseClick(hitObject, hitPoint, controller);
     }
 
-    /*** Public Methods ***/
+    protected override void InitialiseAudio() {
+        base.InitialiseAudio();
+        if (finishedJobVolume < 0.0f) finishedJobVolume = 0.0f;
+        if (finishedJobVolume > 1.0f) finishedJobVolume = 1.0f;
+        List<AudioClip> sounds = new();
+        List<float> volumes = new();
+        sounds.Add(finishedJobSound);
+        volumes.Add(finishedJobVolume);
+        audioElement.Add(sounds, volumes);
+    }
 
     public override void SetBuilding(Building project) {
         base.SetBuilding(project);

@@ -10,6 +10,9 @@ public class WorldObject : MonoBehaviour {
     public int cost, sellValue, hitPoints, maxHitPoints;
     public float weaponRange = 10.0f;
     public float weaponRechargeTime = 1.0f;
+    public AudioClip attackSound, selectSound, useWeaponSound;
+    public float attackVolume = 1.0f, selectVolume = 1.0f, useWeaponVolume = 1.0f;
+    protected AudioElement audioElement;
     protected Player player;
     protected string[] actions = { };
     protected bool currentlySelected = false;
@@ -39,6 +42,7 @@ public class WorldObject : MonoBehaviour {
                 SetTeamColor();
             }
         }
+        InitialiseAudio();
     }
 
     public void SetTeamColor() {
@@ -79,7 +83,10 @@ public class WorldObject : MonoBehaviour {
 
     public virtual void SetSelection(bool selected, Rect playingArea) {
         currentlySelected = selected;
-        if (selected) this.playingArea = playingArea;
+        if (selected) {
+            audioElement?.Play(selectSound);
+            this.playingArea = playingArea;
+        }
     }
 
     public string[] GetActions() => actions;
@@ -109,6 +116,7 @@ public class WorldObject : MonoBehaviour {
     }
 
     protected virtual void BeginAttack(WorldObject target) {
+        audioElement?.Play(attackSound);
         this.target = target;
         if (TargetInRange()) {
             attacking = true;
@@ -146,6 +154,7 @@ public class WorldObject : MonoBehaviour {
     }
 
     protected virtual void UseWeapon() {
+        audioElement?.Play(useWeaponSound);
         currentWeaponChargeTime = 0.0f;
         //this behaviour needs to be specified by a specific object
     }
@@ -316,4 +325,23 @@ public class WorldObject : MonoBehaviour {
         default: break;
         }
     }
+
+    protected virtual void InitialiseAudio() {
+        List<AudioClip> sounds = new();
+        List<float> volumes = new();
+        if (attackVolume < 0.0f) attackVolume = 0.0f;
+        if (attackVolume > 1.0f) attackVolume = 1.0f;
+        sounds.Add(attackSound);
+        volumes.Add(attackVolume);
+        if (selectVolume < 0.0f) selectVolume = 0.0f;
+        if (selectVolume > 1.0f) selectVolume = 1.0f;
+        sounds.Add(selectSound);
+        volumes.Add(selectVolume);
+        if (useWeaponVolume < 0.0f) useWeaponVolume = 0.0f;
+        if (useWeaponVolume > 1.0f) useWeaponVolume = 1.0f;
+        sounds.Add(useWeaponSound);
+        volumes.Add(useWeaponVolume);
+        audioElement = new(sounds, volumes, objectName + ObjectId, this.transform);
+    }
+
 }

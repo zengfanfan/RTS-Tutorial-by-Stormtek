@@ -2078,6 +2078,14 @@ MonoBehaviour:
   sellValue: 0
   hitPoints: 0
   maxHitPoints: 0
+  weaponRange: 10
+  weaponRechargeTime: 1
+  attackSound: {fileID: 8300000, guid: 63acb506679b4024a98e2dd6b632ff4e, type: 3}
+  selectSound: {fileID: 8300000, guid: c8aef000dca68fd45a88b8012b7de0b4, type: 3}
+  useWeaponSound: {fileID: 8300000, guid: a989b957def1d0f4e9b43b8b5bf60689, type: 3}
+  attackVolume: 1
+  selectVolume: 1
+  useWeaponVolume: 1
   capacity: 1000
 --- !u!1 &7508006080014532088
 GameObject:

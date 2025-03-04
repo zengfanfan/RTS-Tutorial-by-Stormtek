@@ -18,6 +18,7 @@ public class PauseMenu : Menu {
     protected override void SetButtons() => buttons = new string[] { "Resume", "Save Game", "Load Game", "Exit Game" };
 
     protected override void HandleButton(string text) {
+        base.HandleButton(text);
         switch (text) {
         case "Resume": Resume(); break;
         case "Save Game": SaveGame(); break;

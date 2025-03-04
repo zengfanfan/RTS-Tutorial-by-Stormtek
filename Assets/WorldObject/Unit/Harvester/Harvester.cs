@@ -1,21 +1,21 @@
 using UnityEngine;
 using RTS;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 public class Harvester : Unit {
 
     public float capacity;
     public Building resourceStore;
     public float collectionAmount, depositAmount;
-
+    public AudioClip emptyHarvestSound, harvestSound, startHarvestSound;
+    public float emptyHarvestVolume = 0.5f, harvestVolume = 0.5f, startHarvestVolume = 1.0f;
     private bool harvesting = false, emptying = false;
     private float currentLoad = 0.0f;
     private ResourceType harvestType;
     private Resource resourceDeposit;
     private float currentDeposit = 0.0f;
     private int loadedDepositId = -1, loadedStoreId = -1;
-
-    /*** Game Engine methods, all can be overridden by subclass ***/
 
     protected override void Start() {
         base.Start();
@@ -84,8 +84,6 @@ public class Harvester : Unit {
         resourceStore = creator;
     }
 
-    /* Public Methods */
-
     public override void SetHoverState(GameObject hoverObject) {
         base.SetHoverState(hoverObject);
         //only handle input if owned by a human player and currently selected
@@ -114,9 +112,8 @@ public class Harvester : Unit {
         }
     }
 
-    /* Private Methods */
-
     private void StartHarvest(Resource resource) {
+        audioElement?.Play(startHarvestSound);
         resourceDeposit = resource;
         StartMove(resource.transform.position, resource.gameObject);
         //we can only collect one resource at a time, other resources are lost
@@ -128,10 +125,10 @@ public class Harvester : Unit {
         emptying = false;
     }
 
-    private void StopHarvest() {
-    }
+    private void StopHarvest() {    }
 
     private void Collect() {
+        audioElement?.Play(harvestSound);
         float collect = collectionAmount * Time.deltaTime;
         //make sure that the harvester cannot collect more than it can carry
         if (currentLoad + collect > capacity) collect = capacity - currentLoad;
@@ -140,6 +137,7 @@ public class Harvester : Unit {
     }
 
     private void Deposit() {
+        audioElement?.Play(emptyHarvestSound);
         currentDeposit += depositAmount * Time.deltaTime;
         int deposit = Mathf.FloorToInt(currentDeposit);
         if (deposit >= 1) {
@@ -175,6 +173,25 @@ public class Harvester : Unit {
         case "ResourceStoreId": loadedStoreId = (int)(System.Int64)readValue; break;
         default: break;
         }
+    }
+
+    protected override void InitialiseAudio() {
+        base.InitialiseAudio();
+        List<AudioClip> sounds = new();
+        List<float> volumes = new();
+        if (emptyHarvestVolume < 0.0f) emptyHarvestVolume = 0.0f;
+        if (emptyHarvestVolume > 1.0f) emptyHarvestVolume = 1.0f;
+        sounds.Add(emptyHarvestSound);
+        volumes.Add(emptyHarvestVolume);
+        if (harvestVolume < 0.0f) harvestVolume = 0.0f;
+        if (harvestVolume > 1.0f) harvestVolume = 1.0f;
+        sounds.Add(harvestSound);
+        volumes.Add(harvestVolume);
+        if (startHarvestVolume < 0.0f) startHarvestVolume = 0.0f;
+        if (startHarvestVolume > 1.0f) startHarvestVolume = 1.0f;
+        sounds.Add(startHarvestSound);
+        volumes.Add(startHarvestVolume);
+        audioElement.Add(sounds, volumes);
     }
 
 }

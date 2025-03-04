@@ -12,6 +12,8 @@ public class Building : WorldObject {
     public Texture2D rallyPointImage;
     public Texture2D sellImage;
     private bool needsBuilding = false;
+    public AudioClip finishedJobSound;
+    public float finishedJobVolume = 1.0f;
 
     protected override void Awake() {
         base.Awake();
@@ -47,7 +49,10 @@ public class Building : WorldObject {
         if (buildQueue.Count > 0) {
             currentBuildProgress += Time.deltaTime * ResourceManager.BuildSpeed;
             if (currentBuildProgress > maxBuildProgress) {
-                if (player) player.AddUnit(buildQueue.Dequeue(), spawnPoint, rallyPoint, transform.rotation, this);
+                if (player) {
+                    audioElement?.Play(finishedJobSound);
+                    player.AddUnit(buildQueue.Dequeue(), spawnPoint, rallyPoint, transform.rotation, this);
+                }
                 currentBuildProgress = 0.0f;
             }
         }
@@ -154,6 +159,17 @@ public class Building : WorldObject {
         case "PlayingArea": playingArea = LoadManager.LoadRect(reader); break;
         default: break;
         }
+    }
+
+    protected override void InitialiseAudio() {
+        base.InitialiseAudio();
+        if (finishedJobVolume < 0.0f) finishedJobVolume = 0.0f;
+        if (finishedJobVolume > 1.0f) finishedJobVolume = 1.0f;
+        List<AudioClip> sounds = new();
+        List<float> volumes = new();
+        sounds.Add(finishedJobSound);
+        volumes.Add(finishedJobVolume);
+        audioElement.Add(sounds, volumes);
     }
 
 }

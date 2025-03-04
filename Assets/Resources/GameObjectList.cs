@@ -6,6 +6,7 @@ public class GameObjectList : MonoBehaviour {
     public GameObject[] units;
     public GameObject[] worldObjects;
     public GameObject player;
+    public Texture2D[] avatars;
     private static bool created = false;
 
     void Awake() {
@@ -13,6 +14,8 @@ public class GameObjectList : MonoBehaviour {
             DontDestroyOnLoad(transform.gameObject);
             ResourceManager.SetGameObjectList(this);
             created = true;
+            PlayerManager.Load();
+            PlayerManager.SetAvatarTextures(avatars);
         } else {
             Destroy(gameObject);
         }
@@ -48,6 +51,8 @@ public class GameObjectList : MonoBehaviour {
 
     public GameObject GetPlayerObject() => player;
 
+    public Texture2D[] GetAvatars() => avatars;
+    
     public Texture2D GetBuildImage(string name) {
         for (int i = 0; i < buildings.Length; i++) {
             Building building = buildings[i].GetComponent<Building>();

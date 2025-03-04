@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using RTS;
 using UnityEngine;
 
 public class Unit : WorldObject {
     public float moveSpeed, rotateSpeed;
+    public AudioClip driveSound, moveSound;
+    public float driveVolume = 0.5f, moveVolume = 1.0f;
     protected bool moving, rotating;
     private Vector3 destination;
     private Quaternion targetRotation;
@@ -30,6 +33,7 @@ public class Unit : WorldObject {
         //sometimes it gets stuck exactly 180 degrees out in the calculation and does nothing, this check fixes that
         Quaternion inverseTargetRotation = new(-targetRotation.x, -targetRotation.y, -targetRotation.z, -targetRotation.w);
         if (transform.rotation == targetRotation || transform.rotation == inverseTargetRotation) {
+            audioElement?.Play(driveSound);
             rotating = false;
             moving = true;
         }
@@ -72,6 +76,7 @@ public class Unit : WorldObject {
     private void MakeMove() {
         transform.position = Vector3.MoveTowards(transform.position, destination, Time.deltaTime * moveSpeed);
         if (transform.position == destination) {
+            audioElement?.Stop(driveSound);
             moving = false;
             movingIntoPosition = false;
         }
@@ -114,14 +119,15 @@ public class Unit : WorldObject {
             }
         }
     }
+
     public virtual void StartMove(Vector3 destination) {
+        audioElement?.Play(moveSound);
         this.destination = destination;
         targetRotation = Quaternion.LookRotation(destination - transform.position);
         rotating = true;
         moving = false;
         destinationTarget = null;
     }
-
     public virtual void StartMove(Vector3 destination, GameObject destinationTarget) {
         StartMove(destination);
         this.destinationTarget = destinationTarget;
@@ -153,6 +159,21 @@ public class Unit : WorldObject {
         case "DestinationTargetId": loadedDestinationTargetId = (int)(long)readValue; break;
         default: break;
         }
+    }
+
+    protected override void InitialiseAudio() {
+        base.InitialiseAudio();
+        List<AudioClip> sounds = new();
+        List<float> volumes = new();
+        if (driveVolume < 0.0f) driveVolume = 0.0f;
+        if (driveVolume > 1.0f) driveVolume = 1.0f;
+        volumes.Add(driveVolume);
+        sounds.Add(driveSound);
+        if (moveVolume < 0.0f) moveVolume = 0.0f;
+        if (moveVolume > 1.0f) moveVolume = 1.0f;
+        sounds.Add(moveSound);
+        volumes.Add(moveVolume);
+        audioElement.Add(sounds, volumes);
     }
 
 }

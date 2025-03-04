@@ -24,7 +24,10 @@ public class HUD : MonoBehaviour {
     public Texture2D healthy, damaged, critical;
     public Texture2D[] resourceHealthBars;
     public GUISkin playerDetailsSkin;
+    public AudioClip clickSound;
+    public float clickVolume = 1.0f;
 
+    private AudioElement audioElement;
     private readonly Dictionary<ResourceType, Texture2D> resourceImages = new();
     private Dictionary<ResourceType, int> resourceValues = new(), resourceLimits = new();
     private CursorState activeCursorState;
@@ -70,6 +73,12 @@ public class HUD : MonoBehaviour {
 
         SetCursorState(CursorState.Select);
         StartCoroutine(MouseAnimationTimer());
+
+        List<AudioClip> sounds = new();
+        List<float> volumes = new();
+        sounds.Add(clickSound);
+        volumes.Add(clickVolume);
+        audioElement = new(sounds, volumes, "HUD", null);
     }
 
     private IEnumerator MouseAnimationTimer() {
@@ -125,6 +134,7 @@ public class HUD : MonoBehaviour {
         Rect menuButtonPosition = new(leftPos, padding, buttonWidth, buttonHeight);
 
         if (GUI.Button(menuButtonPosition, "Menu")) {
+            PlayClick();
             Time.timeScale = 0.0f;
             PauseMenu pauseMenu = GetComponent<PauseMenu>();
             if (pauseMenu) pauseMenu.enabled = true;
@@ -186,10 +196,12 @@ public class HUD : MonoBehaviour {
         int height = BUILD_IMAGE_HEIGHT / 2;
         if (building.HasSpawnPoint()) {
             if (GUI.Button(new(leftPos, topPos, width, height), building.sellImage)) {
+                PlayClick();
                 building.Sell();
             }
             leftPos += width + BUTTON_SPACING;
             if (GUI.Button(new(leftPos, topPos, width, height), building.rallyPointImage)) {
+                PlayClick();
                 if (activeCursorState != CursorState.RallyPoint && previousCursorState != CursorState.RallyPoint) {
                     SetCursorState(CursorState.RallyPoint);
                 } else {
@@ -238,7 +250,10 @@ public class HUD : MonoBehaviour {
             if (action) {
                 //create the button and handle the click of that button
                 if (GUI.Button(pos, action)) {
-                    if (player.SelectedObject) player.SelectedObject.PerformAction(actions[i]);
+                    if (player.SelectedObject) {
+                        PlayClick();
+                        player.SelectedObject.PerformAction(actions[i]);
+                    }
                 }
             }
         }
@@ -357,5 +372,7 @@ public class HUD : MonoBehaviour {
 
     public CursorState GetPreviousCursorState() => previousCursorState;
     public CursorState GetCursorState() => activeCursorState;
+
+    private void PlayClick() => audioElement?.Play(clickSound);
 
 }

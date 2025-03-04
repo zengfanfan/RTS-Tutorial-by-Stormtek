@@ -19,10 +19,24 @@ public class LevelLoader : MonoBehaviour {
             DontDestroyOnLoad(transform.gameObject);
             created = true;
             initialised = true;
+            SceneManager.sceneLoaded += (a,b) => OnLevelWasLoadedZ();
         } else {
             Destroy(gameObject);
         }
-        SceneManager.sceneLoaded += (a,b) => OnLevelWasLoadedZ();
+
+        if (initialised) {
+            SelectPlayerMenu menu = FindObjectOfType(typeof(SelectPlayerMenu)) as SelectPlayerMenu;
+            if (!menu) {
+                //we have started from inside a map, rather than the main menu
+                //this happens if we launch Unity from inside a map file for testing
+                Player[] players = FindObjectsOfType(typeof(Player)) as Player[];
+                foreach (Player player in players) {
+                    if (player.human) {
+                        PlayerManager.SelectPlayer(player.username, 0);
+                    }
+                }
+            }
+        }
     }
 
     void OnLevelWasLoadedZ() {

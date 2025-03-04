@@ -39,6 +39,7 @@ namespace RTS {
         public static GameObject GetUnit(string name) => gameObjectList.GetUnit(name);
         public static GameObject GetWorldObject(string name) => gameObjectList.GetWorldObject(name);
         public static GameObject GetPlayerObject() => gameObjectList.GetPlayerObject();
+        public static Texture2D[] GetAvatars() => gameObjectList.GetAvatars();
         public static Texture2D GetBuildImage(string name) => gameObjectList.GetBuildImage(name);
 
         public static readonly float ButtonHeight = 40;
@@ -55,5 +56,6 @@ namespace RTS {
             if (loader) return loader.GetNewObjectId();
             return -1;
         }
+
     }
 }

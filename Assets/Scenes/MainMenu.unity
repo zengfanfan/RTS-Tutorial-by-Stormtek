@@ -354,6 +354,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mySkin: {fileID: 11400000, guid: b10ba07184ba62d439fa31cf6ef876d5, type: 2}
   header: {fileID: 2800000, guid: 1e4855a7d39948d48940504b80e17c28, type: 3}
+  clickSound: {fileID: 8300000, guid: 97ad657ee5a18d542ae6a44aa959fa10, type: 3}
+  clickVolume: 1
 --- !u!114 &1228609995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,14 +369,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mySkin: {fileID: 11400000, guid: b10ba07184ba62d439fa31cf6ef876d5, type: 2}
-  avatars:
-  - {fileID: 2800000, guid: 928fe200188eb394eacd5f8f6e719dc1, type: 3}
-  - {fileID: 2800000, guid: 96ecba53387d9a240b15d9496e03fe5b, type: 3}
-  - {fileID: 2800000, guid: 0730cbda6e57fbd47a92728ed41aee92, type: 3}
-  - {fileID: 2800000, guid: 488dec5fd10372046b633aeab5236eec, type: 3}
-  - {fileID: 2800000, guid: bf15ffca40e8ca14ba4685fb64627f9f, type: 3}
-  - {fileID: 2800000, guid: 7abe01c4a56910e47b921883a7bff4a7, type: 3}
   selectionSkin: {fileID: 11400000, guid: 07e7c385005a7a2438a4c06655a17078, type: 2}
+  clickSound: {fileID: 8300000, guid: 97ad657ee5a18d542ae6a44aa959fa10, type: 3}
+  clickVolume: 1
 --- !u!114 &1228609996
 MonoBehaviour:
   m_ObjectHideFlags: 0

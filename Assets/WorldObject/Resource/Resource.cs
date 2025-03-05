@@ -46,4 +46,7 @@ public class Resource : WorldObject {
         base.SaveDetails(writer);
         SaveManager.WriteFloat(writer, "AmountLeft", amountLeft);
     }
+
+    protected override bool ShouldMakeDecision() => false;
+
 }
